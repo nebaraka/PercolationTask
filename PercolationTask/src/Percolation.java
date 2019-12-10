@@ -26,40 +26,45 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        if (row < 0 || row > this.n || col < 0 || col > this.n)
+        int stRow = row - 1, stCol = col - 1;
+        if (stRow < 0 || stRow >= this.n || stCol < 0 || stCol >= this.n)
             throw new IllegalArgumentException();
         else {
-            this.grid[row][col] = true;
+            this.grid[stRow][stCol] = true;
             numberOfOpenSites++;
 
-            if (row > 0 && grid[row-1][col]) {
-                weightedQuickUnionUF.union(row*n+col, (row-1)*n+col);
+            if (stRow > 0 && grid[stRow-1][stCol]) {
+                weightedQuickUnionUF.union(stRow*n+stCol, (stRow-1)*n+stCol);
             }
-            if (col > 0 && grid[row][col-1]) {
-                weightedQuickUnionUF.union(row*n+col, row*n+(col-1));
+            if (stCol > 0 && grid[stRow][stCol-1]) {
+                weightedQuickUnionUF.union(stRow*n+stCol, stRow*n+(stCol-1));
             }
-            if (row < this.n - 1 && grid[row+1][col]) {
-                weightedQuickUnionUF.union(row*n+col, (row+1)*n+col);
+            if (stRow < this.n - 1 && grid[stRow+1][stCol]) {
+                weightedQuickUnionUF.union(stRow*n+stCol, (stRow+1)*n+stCol);
             }
-            if (col < this.n - 1 && grid[row][col+1]) {
-                weightedQuickUnionUF.union(row*n+col, row*n+(col+1));
+            if (stCol < this.n - 1 && grid[stRow][stCol+1]) {
+                weightedQuickUnionUF.union(stRow*n+stCol, stRow*n+(stCol+1));
             }
         }
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if (row < 0 || row > this.n || col < 0 || col > this.n)
+        int stRow = row - 1, stCol = col - 1;
+        if (stRow < 0 || stRow >= this.n || stCol < 0 || stCol >= this.n)
             throw new IllegalArgumentException();
         else {
-            return this.grid[row][col];
+            return this.grid[stRow][stCol];
         }
     }
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
+        int stRow = row - 1, stCol = col - 1;
+        if (stRow < 0 || stRow >= this.n || stCol < 0 || stCol >= this.n)
+            throw new IllegalArgumentException();
         for (int i = 0; i < n-1; i++) {
-            if (weightedQuickUnionUF.connected(row*n+col, i)) {
+            if (weightedQuickUnionUF.connected(stRow*n+stCol, i)) {
                 return  true;
             }
         }
@@ -93,6 +98,7 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String[] args) {
+        /*
         int N = 7;
         Percolation percolation = new Percolation(N);
         StdOut.print("Initialized grid\n");
@@ -139,6 +145,6 @@ public class Percolation {
 
         StdOut.print("Percolates:\n");
         StdOut.print(percolation.percolates());
-        StdOut.print('\n');
+        StdOut.print('\n');*/
     }
 }

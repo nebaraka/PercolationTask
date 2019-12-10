@@ -65,15 +65,15 @@ public class PercolationStats {
     }
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    public void showThresholds() {
+   /* public void showThresholds() {
         for (int i = 0; i < thresholds.length; i++) {
             StdOut.print("Thresholds[" + i + "] = " + thresholds[i]);
             StdOut.print('\n');
         }
-    }
+    }*/
 
     // test client (see below)
-    public static void main(String[] args) {
+    public static void main(String[] args) {/*
         PercolationStats ps = new PercolationStats(10, 50);
 
         ps.showThresholds();
@@ -85,7 +85,7 @@ public class PercolationStats {
         StdOut.print('\n');
 
         StdOut.print("Intervals = [" + ps.confidenceLo() + ", " + ps.confidenceHi() + "]");
-        StdOut.print('\n');
+        StdOut.print('\n');*/
     }
 }
 
