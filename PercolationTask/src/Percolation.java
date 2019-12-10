@@ -64,7 +64,7 @@ public class Percolation {
         if (stRow < 0 || stRow >= this.n || stCol < 0 || stCol >= this.n)
             throw new IllegalArgumentException();
         for (int i = 0; i < n-1; i++) {
-            if (weightedQuickUnionUF.connected(stRow*n+stCol, i)) {
+            if (isOpen(row, col) && weightedQuickUnionUF.connected(stRow*n+stCol, i)) {
                 return  true;
             }
         }
@@ -79,7 +79,7 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
         for (int i = 1; i <= n; i++) {
-            if (isFull(n-1, i)) {
+            if (isFull(n, i)) {
                 return true;
             }
         }
@@ -136,13 +136,16 @@ public class Percolation {
         StdOut.print(percolation.isFull(5, 5));
         StdOut.print('\n');
 
+        StdOut.print("Percolates1:\n");
+        StdOut.print(percolation.percolates());
+        StdOut.print('\n');
 
         StdOut.print("Opened (5,4) and (6,4):\n");
         percolation.open(6,5);
         percolation.open(7,5);
         showGrid(percolation, N);
 
-        StdOut.print("Percolates:\n");
+        StdOut.print("Percolates2:\n");
         StdOut.print(percolation.percolates());
         StdOut.print('\n');*/
     }
