@@ -31,7 +31,9 @@ public class Percolation {
             throw new IllegalArgumentException();
         else {
             this.grid[stRow][stCol] = true;
-            numberOfOpenSites++;
+            if (isOpen(row, col)) {
+                numberOfOpenSites++;
+            }
 
             if (stRow > 0 && grid[stRow-1][stCol]) {
                 weightedQuickUnionUF.union(stRow*n+stCol, (stRow-1)*n+stCol);
@@ -63,7 +65,7 @@ public class Percolation {
         int stRow = row - 1, stCol = col - 1;
         if (stRow < 0 || stRow >= this.n || stCol < 0 || stCol >= this.n)
             throw new IllegalArgumentException();
-        for (int i = 0; i < n-1; i++) {
+        for (int i = 0; i < n; i++) {
             if (isOpen(row, col) && weightedQuickUnionUF.connected(stRow*n+stCol, i)) {
                 return  true;
             }
@@ -98,6 +100,14 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String[] args) {
+        /*int N = 1;
+        Percolation percolation = new Percolation(N);
+        StdOut.print("Initialized grid\n");
+        showGrid(percolation, N);
+        StdOut.print("Opened (0,4):\n");
+        percolation.open(1,1);
+        showGrid(percolation, N);
+        StdOut.print(percolation.isFull(1,1) + "\n\n");*/
         /*int N = 7;
         Percolation percolation = new Percolation(N);
         StdOut.print("Initialized grid\n");
