@@ -78,7 +78,7 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        for (int i = 0; i < n; i++) {
+        for (int i = 1; i <= n; i++) {
             if (isFull(n-1, i)) {
                 return true;
             }
@@ -87,8 +87,8 @@ public class Percolation {
     }
 
     private static void showGrid(Percolation percolation, int N) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j <  N; j++) {
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <=  N; j++) {
                 StdOut.print(percolation.isOpen(i, j));
                 StdOut.print(' ');
             }
@@ -98,49 +98,48 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String[] args) {
-        /*
-        int N = 7;
+        /*int N = 7;
         Percolation percolation = new Percolation(N);
         StdOut.print("Initialized grid\n");
         showGrid(percolation, N);
 
 
         StdOut.print("Opened (0,4):\n");
-        percolation.open(0,4);
+        percolation.open(1,5);
         showGrid(percolation, N);
 
         StdOut.print("Opened (1,4):\n");
-        percolation.open(1,4);
+        percolation.open(2,5);
         showGrid(percolation, N);
 
         StdOut.print("Opened (2,4):\n");
-        percolation.open(2,4);
+        percolation.open(3,5);
         showGrid(percolation, N);
 
         StdOut.print("Opened (4,4):\n");
-        percolation.open(4,4);
+        percolation.open(5,5);
         showGrid(percolation, N);
 
 
         StdOut.print("IsFull (2,4):\n");
-        StdOut.print(percolation.isFull(2, 4));
+        StdOut.print(percolation.isFull(3, 5));
         StdOut.print('\n');
 
         StdOut.print("IsFull (4,4):\n");
-        StdOut.print(percolation.isFull(4, 4));
+        StdOut.print(percolation.isFull(5, 5));
         StdOut.print('\n');
 
         StdOut.print("Opened (3,4):\n");
-        percolation.open(3,4);
+        percolation.open(4,5);
 
         StdOut.print("IsFull (4,4):\n");
-        StdOut.print(percolation.isFull(4, 4));
+        StdOut.print(percolation.isFull(5, 5));
         StdOut.print('\n');
 
 
         StdOut.print("Opened (5,4) and (6,4):\n");
-        percolation.open(5,4);
-        percolation.open(6,4);
+        percolation.open(6,5);
+        percolation.open(7,5);
         showGrid(percolation, N);
 
         StdOut.print("Percolates:\n");
