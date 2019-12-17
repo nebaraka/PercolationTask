@@ -7,6 +7,8 @@ public class Percolation {
     private WeightedQuickUnionUF weightedQuickUnionUF;
     private int n;
     private int numberOfOpenSites;
+    private int[] topRadices;
+    private int[] botRadices;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
@@ -15,11 +17,16 @@ public class Percolation {
         else {
             this.n = n;
             weightedQuickUnionUF = new WeightedQuickUnionUF(this.n*this.n);
+            topRadices = new int[n];
+            botRadices = new int[n];
             numberOfOpenSites = 0;
             grid = new boolean[this.n][this.n];
-            for (int i = 0; i < this.n; i++)
+            for (int i = 0; i < this.n; i++) {
                 for (int j = 0; j < this.n; j++)
                     grid[i][j] = false;
+                topRadices[i] = i;
+                botRadices[i] = n*(n-1)+i;
+            }
 
         }
     }
@@ -30,10 +37,10 @@ public class Percolation {
         if (stRow < 0 || stRow >= this.n || stCol < 0 || stCol >= this.n)
             throw new IllegalArgumentException();
         else {
-            this.grid[stRow][stCol] = true;
-            if (isOpen(row, col)) {
+            if (!isOpen(row, col)) {
                 numberOfOpenSites++;
             }
+            this.grid[stRow][stCol] = true;
 
             if (stRow > 0 && grid[stRow-1][stCol]) {
                 weightedQuickUnionUF.union(stRow*n+stCol, (stRow-1)*n+stCol);
@@ -62,12 +69,29 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
+        if (!isOpen(row, col)) {
+            return false;
+        }
         int stRow = row - 1, stCol = col - 1;
         if (stRow < 0 || stRow >= this.n || stCol < 0 || stCol >= this.n)
             throw new IllegalArgumentException();
+
+        int rootP = weightedQuickUnionUF.find(stRow*(n) + stCol);
+        /*for (int i = 0; i < n; i++) {
+            if (isOpen(1,i+1)) topRadices[i] = weightedQuickUnionUF.find(i);
+        }*/
+        boolean isPrevOpen = false;
         for (int i = 0; i < n; i++) {
-            if (isOpen(row, col) && weightedQuickUnionUF.connected(stRow*n+stCol, i)) {
-                return  true;
+            if (isOpen(1,i+1)) {
+                if (isPrevOpen) { continue; }
+                topRadices[i] = weightedQuickUnionUF.find(i);
+                if (rootP == topRadices[i]) {
+                    return true;
+                } else {
+                    isPrevOpen = true;
+                }
+            } else {
+                isPrevOpen = false;
             }
         }
         return false;
@@ -80,9 +104,35 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        for (int i = 1; i <= n; i++) {
-            if (isFull(n, i)) {
-                return true;
+        boolean isPrevOpenTop = false;
+        for (int i = 0; i < n; i++) {
+            if (isOpen(1,i+1)) {
+                if (isPrevOpenTop) {
+                    topRadices[i] = topRadices[i-1];
+                    continue;
+                }
+                if ((n > 1 && !grid[1][i])) continue;
+                topRadices[i] = weightedQuickUnionUF.find(i);
+                isPrevOpenTop = true;
+            }
+            else
+                isPrevOpenTop = false;
+            //if (isOpen(n,i+1)) botRadices[i] = weightedQuickUnionUF.find(n*(n-1)+i);
+        }
+        boolean isPrevOpenBot = false;
+        for (int i = 0; i < n; i++) {
+            if (isOpen(n, i+1)) {
+                if (isPrevOpenBot || (n > 1 && !grid[n-2][i])) { continue; }
+                botRadices[i] = weightedQuickUnionUF.find(n*(n-1)+i);
+                for (int j = 0; j < n; j++) {
+                    if (isOpen(1,j+1)) {
+                        if (botRadices[i] == topRadices[j])
+                            return true;
+                    }
+                }
+                isPrevOpenBot = true;
+            } else {
+                isPrevOpenBot = false;
             }
         }
         return false;
@@ -100,17 +150,9 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String[] args) {
-        /*int N = 1;
+        int N = 7;
         Percolation percolation = new Percolation(N);
-        StdOut.print("Initialized grid\n");
-        showGrid(percolation, N);
-        StdOut.print("Opened (0,4):\n");
-        percolation.open(1,1);
-        showGrid(percolation, N);
-        StdOut.print(percolation.isFull(1,1) + "\n\n");*/
-        /*int N = 7;
-        Percolation percolation = new Percolation(N);
-        StdOut.print("Initialized grid\n");
+        /*StdOut.print("Initialized grid\n");
         showGrid(percolation, N);
 
 
@@ -150,13 +192,57 @@ public class Percolation {
         StdOut.print(percolation.percolates());
         StdOut.print('\n');
 
-        StdOut.print("Opened (5,4) and (6,4):\n");
-        percolation.open(6,5);
-        percolation.open(7,5);
+        StdOut.print("IsFull (4,5):\n");
+        StdOut.print(percolation.isFull(5, 6));
+        StdOut.print('\n');
+
+        StdOut.print("Opened (4,5):\n");
+        percolation.open(5,6);
+
+        StdOut.print("Opened (5,5) and (6,5):\n");
+        percolation.open(6,6);
+        percolation.open(7,6);
+
+        percolation.open(7,4);
+        percolation.open(6,4);
+        percolation.open(6,3);
+        percolation.open(6,2);
+        percolation.open(7,2);*/
+
+        percolation.open(1,1);
+        percolation.open(2,1);
+        percolation.open(3,1);
+        percolation.open(4,1);
+
+        percolation.open(4,2);
+        percolation.open(4,3);
+
+        percolation.open(3,3);
+        percolation.open(2,3);
+
+        percolation.open(2,4);
+        percolation.open(2,5);
+
+        percolation.open(3,5);
+        percolation.open(4,5);
+        percolation.open(5,5);
+
+        percolation.open(5,6);
+
+        percolation.open(5,7);
+        percolation.open(6,7);
+        percolation.open(7,7);
+
+        StdOut.print("IsFull bottom:\n");
+        StdOut.print(percolation.isFull(7, 7));
+        StdOut.print('\n');
+
         showGrid(percolation, N);
+
+
 
         StdOut.print("Percolates2:\n");
         StdOut.print(percolation.percolates());
-        StdOut.print('\n');*/
+        StdOut.print('\n');
     }
 }
